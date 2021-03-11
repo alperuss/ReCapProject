@@ -16,5 +16,7 @@ namespace Business.Constants
         public static string MaintenanceTime="Sistem bakımda";
         public static string NameInvalid="İsimi eksik ya da hatalı girdiniz.";
         public static string PasswordInvalid="Şifreniz en az 8 harf olmalıdır.";
+        public static string CarCountOfBrandError = "Bir markada en fazla 10 araba olabilir";
+        
     }
 }

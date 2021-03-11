@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
@@ -25,22 +26,17 @@ namespace Business.Concrete
         [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
-            //if (car.Description.Length >= 2 && car.DailyPrice > 0)
-            //{
-            //    _carDal.Add(car);
-            //    return new SuccessResult(Messages.SuccessAdded);
-            //}
-            //else
-            //{
-            //    return new ErrorResult(Messages.CarNameInvalid);
-            //    //Console.WriteLine("Gerekli şartlara uygun değil!");
+            //bir renkte en fazla 10 araba olabilir
+            if (CheckIfCarCountOfBrandCorrect(car.BrandId).Success)
+            {
+                _carDal.Add(car);
+                return new SuccessResult(Messages.SuccessAdded);
+            }
+            return new ErrorResult();
+            
 
-            //}
+            
 
-            //ValidationTool.Validate(new CarValidator(),car);
-
-            _carDal.Add(car);
-            return new SuccessResult(Messages.SuccessAdded);
         }
 
         public IResult Delete(Car car)
@@ -87,5 +83,16 @@ namespace Business.Concrete
             _carDal.Update(car);
             return new SuccessResult(Messages.SuccessUpdated);
         }
+
+        private IResult CheckIfCarCountOfBrandCorrect(int brandId)
+        {
+            var result = _carDal.GetAll(c => c.BrandId == brandId).Count;
+            if (result >= 10)
+            {
+                return new ErrorResult(Messages.CarCountOfBrandError);
+            }
+            return new SuccessResult();
+        }
+
     }
 }
