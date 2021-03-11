@@ -14,5 +14,7 @@ namespace Business.Constants
         public static string RentalInvalid="Kiralama başarısız.";
         public static string CarNameInvalid="Araba adı geçersiz.";
         public static string MaintenanceTime="Sistem bakımda";
+        public static string NameInvalid="İsimi eksik ya da hatalı girdiniz.";
+        public static string PasswordInvalid="Şifreniz en az 8 harf olmalıdır.";
     }
 }
