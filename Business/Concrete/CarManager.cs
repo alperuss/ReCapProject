@@ -4,6 +4,7 @@ using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -18,21 +19,26 @@ namespace Business.Concrete
     public class CarManager : ICarService
     {
         ICarDal _carDal;
+        IColorService _colorService;
 
-        public CarManager(ICarDal carDal)
+        public CarManager(ICarDal carDal,IColorService colorService)
         {
             _carDal = carDal;
+            _colorService = colorService;
         }
         [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
-            //bir renkte en fazla 10 araba olabilir
-            if (CheckIfCarCountOfBrandCorrect(car.BrandId).Success)
+            //bir markada en fazla 10 araba olabilir
+            IResult result = BusinessRules.Run(CheckIfCarCountOfBrandCorrect(car.BrandId),CheckIfColorLimitExceded());
+            if (result !=null)
             {
-                _carDal.Add(car);
-                return new SuccessResult(Messages.SuccessAdded);
+                return result;
             }
-            return new ErrorResult();
+            _carDal.Add(car);
+            return new SuccessResult(Messages.SuccessAdded);
+            
+          
             
 
             
@@ -90,6 +96,15 @@ namespace Business.Concrete
             if (result >= 10)
             {
                 return new ErrorResult(Messages.CarCountOfBrandError);
+            }
+            return new SuccessResult();
+        }
+        private IResult CheckIfColorLimitExceded()
+        {
+            var result = _colorService.GetAll();
+            if (result.Data.Count>15)
+            {
+                return new ErrorResult(Messages.ColorLimitExceded);
             }
             return new SuccessResult();
         }

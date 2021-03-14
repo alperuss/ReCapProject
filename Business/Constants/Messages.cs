@@ -17,6 +17,7 @@ namespace Business.Constants
         public static string NameInvalid="İsimi eksik ya da hatalı girdiniz.";
         public static string PasswordInvalid="Şifreniz en az 8 harf olmalıdır.";
         public static string CarCountOfBrandError = "Bir markada en fazla 10 araba olabilir";
-        
+        public static string ColorLimitExceded = "Araba renk sayısı 15'ten fazla";
+        public static string CarImageLimitExceeded="Araba resmi sayısı 5'ten fazla olamaz";
     }
 }
